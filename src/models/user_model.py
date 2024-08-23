@@ -26,11 +26,11 @@ class User(BaseModel):
     is_active: Mapped[bool] = mapped_column(default=True)
     is_superuser: Mapped[bool] = mapped_column(default=False)
     is_verified: Mapped[bool] = mapped_column(default=False)
-    invite: Mapped["InviteModel"] = relationship(
-        back_populates="user", cascade="all, delete", passive_deletes=True
-    )
     account: Mapped["AccountModel"] = relationship(
-        back_populates="user", cascade="all, delete", passive_deletes=True
+        back_populates="user",
+        cascade="all, delete",
+        passive_deletes=True,
+        lazy="selectin",
     )
     secret: Mapped["SecretModel"] = relationship(
         back_populates="user", cascade="all, delete", passive_deletes=True
@@ -42,8 +42,12 @@ class User(BaseModel):
         back_populates="user", cascade="all, delete", passive_deletes=True
     )
     author: Mapped["TaskModel"] = relationship(
-        back_populates="author_user", passive_deletes=True
+        back_populates="author_user",
+        passive_deletes=True,
+        foreign_keys="TaskModel.author_id",
     )
     responsible: Mapped["TaskModel"] = relationship(
-        back_populates="responsible_user", passive_deletes=True
+        back_populates="responsible_user",
+        passive_deletes=True,
+        foreign_keys="TaskModel.responsible_id",
     )

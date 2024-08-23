@@ -25,7 +25,4 @@ class MemberModel(BaseModel):
     user: Mapped["User"] = relationship(back_populates="member")
     company: Mapped["CompanyModel"] = relationship(back_populates="member")
 
-    __table_args__ = (
-        UniqueConstraint("user_id"),
-        UniqueConstraint("company_id"),
-    )
+    __table_args__ = (UniqueConstraint("user_id"),)

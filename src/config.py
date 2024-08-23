@@ -1,5 +1,18 @@
+from pathlib import Path
+
 from dotenv import find_dotenv, load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import BaseModel
+
+BASE_DIR = Path(__file__).parent.parent
+
+
+class AuthJWT(BaseModel):
+    private_key_path: Path = BASE_DIR / "certs" / "jwt-private.pem"
+    public_key_path: Path = BASE_DIR / "certs" / "jwt-public.pem"
+    algorithm: str = "RS256"
+    access_token_expire_minutes: int = 30
+    refresh_token_expire_days: int = 3
 
 
 class Settings(BaseSettings):
@@ -13,6 +26,13 @@ class Settings(BaseSettings):
 
     REDIS_HOST: str
     REDIS_PORT: str
+
+    SMTP_USER: str
+    SMTP_PASSWORD: str
+    SMTP_HOST: str
+    SMTP_PORT: str
+
+    auth_jwt: AuthJWT = AuthJWT()
 
     @property
     def DB_URL(self):

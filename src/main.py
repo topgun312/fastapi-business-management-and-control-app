@@ -10,6 +10,12 @@ from redis import asyncio as aioredis
 from fastapi_cache.backends.redis import RedisBackend
 from config import settings
 from src.api import router
+from src.api.users.v1.routers import (
+    work_data_router,
+    company_reg_router,
+    member_reg_router,
+    auth_router,
+)
 from loguru import logger
 
 
@@ -54,6 +60,10 @@ def create_fastapi_app():
         )
 
     _app.include_router(router=router, prefix="/api")
+    _app.include_router(router=auth_router, prefix="/api/auth")
+    _app.include_router(router=company_reg_router, prefix="/api/reg_func")
+    _app.include_router(router=member_reg_router, prefix="/api/reg_member")
+    _app.include_router(router=work_data_router, prefix="/api/work_data")
     return _app
 
 

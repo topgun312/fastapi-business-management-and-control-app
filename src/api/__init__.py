@@ -7,6 +7,8 @@ import asyncio
 from sqlalchemy import text
 from loguru import logger
 
+__all__ = ["router"]
+
 
 router = APIRouter()
 

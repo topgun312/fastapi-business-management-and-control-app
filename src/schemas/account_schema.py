@@ -1,6 +1,5 @@
 import datetime
-
-from pydantic import BaseModel, UUID4, Field
+from pydantic import BaseModel, UUID4, EmailStr
 
 
 class IdAccountSchema(BaseModel):
@@ -8,13 +7,17 @@ class IdAccountSchema(BaseModel):
 
 
 class CreateAccountSchema(BaseModel):
-    email: str = Field(max_length=100)
+    email: EmailStr
+
+
+class UpdateAccountSchemabyID(IdAccountSchema, CreateAccountSchema):
     user_id: UUID4
 
 
-class UpdateAccountSchema(IdAccountSchema, CreateAccountSchema): ...
+class UpdateAccountSchemabyEmail(BaseModel):
+    email: EmailStr
 
 
-class UserSchema(IdAccountSchema, CreateAccountSchema):
+class AccountSchema(IdAccountSchema, CreateAccountSchema):
     created_at: datetime.datetime
     updated_at: datetime.datetime

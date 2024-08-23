@@ -1,10 +1,10 @@
 TAG_METADATA = [
     {
-        "name": "company_and_employee",
+        "name": "users",
         "description": "Registration of a company or employee and work with personal data of an employee",
     },
     {
-        "name": "company_structure",
+        "name": "structure",
         "description": "Work with the organizational structure of the company",
     },
     {"name": "tasks", "description": "Working with the task book"},
