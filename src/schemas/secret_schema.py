@@ -8,8 +8,6 @@ class IdSecretSchema(BaseModel):
 
 class CreateSecretSchema(BaseModel):
     password: str
-    user_id: UUID4
-    account_id: UUID4
 
 
 class UpdateSecretSchema(IdSecretSchema, CreateSecretSchema): ...

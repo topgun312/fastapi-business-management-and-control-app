@@ -12,7 +12,6 @@ class CreateCompanySchema(BaseModel):
     address: str = Field(max_length=100)
     description: str
     website: str = Field(max_length=30)
-    account_id: UUID4
 
 
 class UpdateCompanySchema(IdCompanySchema, CreateCompanySchema): ...

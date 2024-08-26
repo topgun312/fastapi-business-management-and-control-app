@@ -30,7 +30,11 @@ class TaskModel(BaseModel):
     deadline: Mapped[datetime.datetime]
     status: Mapped[bool] = mapped_column(default=False)
     time_estimate: Mapped[str]
-    author_user: Mapped["User"] = relationship(back_populates="author")
-    responsible_user: Mapped["User"] = relationship(back_populates="responsible")
+    author_user: Mapped["User"] = relationship(
+        back_populates="author", foreign_keys="TaskModel.author_id"
+    )
+    responsible_user: Mapped["User"] = relationship(
+        back_populates="responsible", foreign_keys="TaskModel.responsible_id"
+    )
 
     __table_args__ = (UniqueConstraint("author_id"), UniqueConstraint("responsible_id"))
