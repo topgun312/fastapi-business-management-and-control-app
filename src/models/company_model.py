@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from src.models import AccountModel, MemberModel
+    from src.models import AccountModel, MemberModel, StructAdmModel
 
 
 class CompanyModel(BaseModel):
@@ -29,5 +29,7 @@ class CompanyModel(BaseModel):
     member: Mapped["MemberModel"] = relationship(
         back_populates="company", cascade="all, delete", passive_deletes=True
     )
+    struct_adm: Mapped["StructAdmModel"] = relationship(back_populates="company",
+                                                        cascade="all, delete", passive_deletes=True)
 
     __table_args__ = (UniqueConstraint("account_id"),)

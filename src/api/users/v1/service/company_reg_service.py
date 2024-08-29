@@ -1,4 +1,8 @@
+from uuid import uuid4
+
 from pydantic import EmailStr
+from sqlalchemy_utils import Ltree
+
 from src.utils.service import BaseService
 from src.workers.tasks import get_invite_code_report
 from fastapi import BackgroundTasks, HTTPException
@@ -16,6 +20,7 @@ class CompanyRegService(BaseService):
     company_repository: str = "company"
     secret_repository: str = "secret"
     member_repository: str = "member"
+    struct_adm_repository: str = "struct_adm"
 
     @classmethod
     async def check_account(
@@ -31,6 +36,7 @@ class CompanyRegService(BaseService):
                 cls.account_repository
             ].add_one_and_get_obj(**kwargs)
             invite_code = create_invite_code()
+            print(invite_code)
             await uow.__dict__[cls.invite_repository].add_one(
                 code=invite_code, account_id=new_account.id
             )
@@ -73,18 +79,25 @@ class CompanyRegService(BaseService):
                     _email=account_data["email"],
                     user_id=user_id,
                     email=account_data["email"],
-                )  # user_id
-                company_id = await uow.__dict__[
+                )
+                company = await uow.__dict__[
                     cls.company_repository
-                ].add_one_and_get_id(
+                ].add_one_and_get_obj(
                     account_id=account.id, **company_data
-                )  # account_id
+                )
+
                 await uow.__dict__[cls.secret_repository].add_one(
                     user_id=user_id, account_id=account.id, **secret_data
-                )  # user_id, account_id
-                await uow.__dict__[cls.member_repository].add_one(
-                    user_id=user_id, company_id=company_id
                 )
+                await uow.__dict__[cls.member_repository].add_one(
+                    user_id=user_id, company_id=company.id
+                )
+
+                a = await uow.__dict__[cls.struct_adm_repository].add_one_and_get_obj(
+                    name=company.name, company_id=company.id
+                ) #вот здесь пытаюсь создать вершину дерева) только в модель в поле path ничего не добавляется
+                print(a)
+
                 return True
             except Exception as ex:
                 print("Error:" + str(ex))

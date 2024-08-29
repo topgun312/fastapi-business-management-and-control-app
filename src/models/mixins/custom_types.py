@@ -1,10 +1,12 @@
 from typing import Annotated
 from uuid import uuid4
 from datetime import datetime
-from sqlalchemy import text, UUID, DateTime
+from sqlalchemy import text, UUID, DateTime, Integer
 from sqlalchemy.orm import mapped_column
 
 db_utc_now = text("TIMEZONE('utc', now())")
+
+integer_pk = Annotated[int, mapped_column(Integer, primary_key=True)]
 
 uuid_pk = Annotated[
     uuid4, mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)

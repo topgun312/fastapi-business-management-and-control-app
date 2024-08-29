@@ -15,7 +15,6 @@ from src.schemas.secret_schema import CreateSecretSchema
 router = APIRouter(prefix="/company/reg", tags=["Company Registration"])
 
 
-#
 @router.get("/check_account/{account_email}")
 async def get_check_account(
     account_email: EmailStr,
