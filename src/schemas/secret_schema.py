@@ -1,18 +1,28 @@
 import datetime
 from pydantic import BaseModel, UUID4
 
+from src.schemas.response import BaseResponse
 
-class IdSecretSchema(BaseModel):
+
+class SecretId(BaseModel):
     id: UUID4
 
 
-class CreateSecretSchema(BaseModel):
+class CreateSecretRequest(BaseModel):
     password: str
 
 
-class UpdateSecretSchema(IdSecretSchema, CreateSecretSchema): ...
+class UpdateSecretRequest(SecretId, CreateSecretRequest): ...
 
 
-class SecretSchema(IdSecretSchema, CreateSecretSchema):
+class SecretDB(SecretId, CreateSecretRequest):
     created_at: datetime.datetime
     updated_at: datetime.datetime
+
+
+class SecretResponse(BaseResponse):
+    payload: SecretDB
+
+
+class SecretListResponse(BaseResponse):
+    payload: list[SecretDB]

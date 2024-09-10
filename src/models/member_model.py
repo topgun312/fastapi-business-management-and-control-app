@@ -1,6 +1,8 @@
 from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from uuid import uuid4
+
+from src.schemas.member_schema import MemberDB
 from src.models import BaseModel
 from src.models.mixins.custom_types import uuid_pk, created_at_ct, updated_at_ct
 
@@ -26,3 +28,6 @@ class MemberModel(BaseModel):
     company: Mapped["CompanyModel"] = relationship(back_populates="member")
 
     __table_args__ = (UniqueConstraint("user_id"),)
+
+    def to_pydantic_schema(self) -> MemberDB:
+        return MemberDB(**self.__dict__)

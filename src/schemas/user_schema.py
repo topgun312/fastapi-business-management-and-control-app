@@ -1,10 +1,13 @@
 import datetime
 
-from pydantic import BaseModel, UUID4, Field, ConfigDict
-from src.models import AccountModel
+from pydantic import BaseModel, UUID4, Field, EmailStr
+
+from src.schemas.member_schema import MemberDB
+from src.schemas.account_schema import AccountDB
+from src.schemas.response import BaseResponse
 
 
-class IdUserSchema(BaseModel):
+class UserId(BaseModel):
     id: UUID4
 
 
@@ -13,22 +16,37 @@ class UserBase(BaseModel):
     last_name: str = Field(max_length=30)
 
 
-class CreateUserSchema(UserBase): ...
+class CreateUserRequest(UserBase): ...
 
 
-class UpdateUserSchema(CreateUserSchema): ...
+class UpdateUserRequest(CreateUserRequest): ...
 
 
-class UserSchema(IdUserSchema, UserBase):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-    username: AccountModel.email
-    email: AccountModel.email
+class UserDB(UserId, UserBase):
     registered_at: datetime.datetime
     updated_at: datetime.datetime
+    is_active: bool
+    is_admin: bool
+    account: AccountDB
+    member: MemberDB
 
 
-class UserAuthSchema(BaseModel):
-    username: str
-    email: str
+class UserAuthSchema(UserId):
+    username: EmailStr
     password: bytes
-    active: bool = True
+    is_active: bool = True
+    is_admin: bool = False
+
+
+class Token(BaseModel):
+    access_token: str
+    refresh_token: str | None = None
+    token_type: str = "Bearer"
+
+
+class UserResponse(BaseResponse):
+    payload: UserDB
+
+
+class UserListResponse(BaseResponse):
+    payload: list[UserDB]

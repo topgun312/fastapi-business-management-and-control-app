@@ -1,15 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Request
+from fastapi import APIRouter, HTTPException, Request, Depends, BackgroundTasks
 from fastapi.responses import RedirectResponse
-
-
 from src.models import AccountModel
-from src.schemas.account_schema import UpdateAccountSchemabyEmail
-from src.utils.unit_of_work import UnitOfWork
+from src.schemas.account_schema import UpdateAccountRequestByEmail
 from src.api.users.v1.service import CompanyRegService
 from pydantic import EmailStr
-from src.schemas.user_schema import CreateUserSchema
-from src.schemas.company_schema import CreateCompanySchema
-from src.schemas.secret_schema import CreateSecretSchema
+from src.schemas.user_schema import CreateUserRequest
+from src.schemas.company_schema import CreateCompanyRequest
+from src.schemas.secret_schema import CreateSecretRequest
 
 
 router = APIRouter(prefix="/company/reg", tags=["Company Registration"])
@@ -20,10 +17,13 @@ async def get_check_account(
     account_email: EmailStr,
     request: Request,
     background_tasks: BackgroundTasks,
-    uow: UnitOfWork = Depends(UnitOfWork),
-):
-    account: AccountModel | None = await CompanyRegService.check_account(
-        uow=uow, email=account_email, background_tasks=background_tasks
+    service: CompanyRegService = Depends(CompanyRegService)
+) -> RedirectResponse:
+    """
+    Get check account
+    """
+    account: AccountModel | None = await service.check_account(
+        email=account_email, background_tasks=background_tasks
     )
     if account:
         raise HTTPException(status_code=404, detail="Such an email already exists")
@@ -36,27 +36,28 @@ async def sign_up(
     account: EmailStr,
     invite_code: int,
     request: Request,
-    uow: UnitOfWork = Depends(UnitOfWork),
-):
-    result = await CompanyRegService.sign_up(uow=uow, code=invite_code, email=account)
-
-    if not result:
-        raise HTTPException(status_code=404, detail="Incorrect data has been entered")
-
+    service: CompanyRegService = Depends(CompanyRegService)
+) -> RedirectResponse:
+    """
+    Sigh up after receiving the code
+    """
+    await service.sign_up(code=invite_code, email=account)
     redirect_url = request.url_for("sign_up_complete")
     return RedirectResponse(url=redirect_url, status_code=302)
 
 
 @router.post("/sign_up_complete")
 async def sign_up_complete(
-    user: CreateUserSchema,
-    secret: CreateSecretSchema,
-    account: UpdateAccountSchemabyEmail,
-    company: CreateCompanySchema,
-    uow: UnitOfWork = Depends(UnitOfWork),
-):
-    result = await CompanyRegService.sign_up_complete(
-        uow=uow,
+    user: CreateUserRequest,
+    secret: CreateSecretRequest,
+    account: UpdateAccountRequestByEmail,
+    company: CreateCompanyRequest,
+    service: CompanyRegService = Depends(CompanyRegService)
+) ->  dict[str, int | str]:
+    """
+    Completion of the registration of the company and its head
+    """
+    result = await service.sign_up_complete(
         user_data=user.model_dump(),
         secret_data=secret.model_dump(),
         account_data=account.model_dump(),

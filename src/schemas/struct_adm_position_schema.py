@@ -1,20 +1,30 @@
 from pydantic import BaseModel, UUID4
 
+from src.schemas.response import BaseResponse
 
-class IdStructAdmPositionSchema(BaseModel):
+
+class StructAdmPositionId(BaseModel):
     id: UUID4
 
 
-class CreateStructAdmPositionSchema(BaseModel):
+class CreateStructAdmPositionRequest(BaseModel):
     struct_adm_id: UUID4
     position_id: UUID4
 
 
-class UpdateStructAdmPositionSchema(
-    IdStructAdmPositionSchema, CreateStructAdmPositionSchema
+class UpdateStructAdmPositionRequest(
+    StructAdmPositionId, CreateStructAdmPositionRequest
 ): ...
 
 
-class StructAdmPositionSchema(
-    IdStructAdmPositionSchema, CreateStructAdmPositionSchema
+class StructAdmPositionDB(
+    StructAdmPositionId, CreateStructAdmPositionRequest
 ): ...
+
+
+class StructAdmPositionResponse(BaseResponse):
+    payload: StructAdmPositionDB
+
+
+class StructAdmPositionListResponse(BaseResponse):
+    payload: list[StructAdmPositionDB]

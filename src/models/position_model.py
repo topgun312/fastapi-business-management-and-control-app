@@ -1,5 +1,7 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from src.schemas.position_schema import PositionDB
 from src.models import BaseModel
 from src.models.mixins.custom_types import uuid_pk, created_at_ct, updated_at_ct
 from typing import TYPE_CHECKING
@@ -22,3 +24,6 @@ class PositionModel(BaseModel):
     struct_adm_position: Mapped["StructAdmPositionModel"] = relationship(
         back_populates="position", cascade="all, delete", passive_deletes=True
     )
+
+    def to_pydantic_schema(self) -> PositionDB:
+        return PositionDB(**self.__dict__)

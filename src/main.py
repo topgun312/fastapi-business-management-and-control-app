@@ -16,6 +16,7 @@ from src.api.users.v1.routers import (
     member_reg_router,
     auth_router,
 )
+from src.api.tasks.v1.routers import task_router
 from loguru import logger
 
 
@@ -61,9 +62,10 @@ def create_fastapi_app():
 
     _app.include_router(router=router, prefix="/api")
     _app.include_router(router=auth_router, prefix="/api/auth")
-    _app.include_router(router=company_reg_router, prefix="/api/reg_func")
-    _app.include_router(router=member_reg_router, prefix="/api/reg_member")
-    _app.include_router(router=work_data_router, prefix="/api/work_data")
+    _app.include_router(router=company_reg_router, prefix="/api")
+    _app.include_router(router=member_reg_router, prefix="/api")
+    _app.include_router(router=work_data_router, prefix="/api")
+    _app.include_router(router=task_router, prefix="/api")
     return _app
 
 

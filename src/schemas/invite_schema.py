@@ -1,19 +1,29 @@
 from pydantic import UUID4, BaseModel, Field
 import datetime
 
+from src.schemas.response import BaseResponse
 
-class IdInviteSchema(BaseModel):
+
+class InviteId(BaseModel):
     id: UUID4
 
 
-class CreateInviteSchema(BaseModel):
-    code: int = Field(max_digits=4)
+class CreateInviteRequest(BaseModel):
+    code: int = Field(max_length=4)
     user_id: UUID4
 
 
-class UpdateInviteSchema(IdInviteSchema, CreateInviteSchema): ...
+class UpdateInviteRequest(InviteId, CreateInviteRequest): ...
 
 
-class InviteSchema(IdInviteSchema, CreateInviteSchema):
+class InviteDB(InviteId, CreateInviteRequest):
     created_at: datetime.datetime
     updated_at: datetime.datetime
+
+
+class InviteResponse(BaseResponse):
+    payload: InviteDB
+
+
+class InviteListResponse(BaseResponse):
+    payload: list[InviteDB]

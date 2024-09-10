@@ -1,8 +1,8 @@
 """Add table
 
-Revision ID: 4de8dcedeb0e
+Revision ID: cdec454b48b9
 Revises: 
-Create Date: 2024-08-28 15:06:00.945115
+Create Date: 2024-09-09 14:34:48.937032
 
 """
 from typing import Sequence, Union
@@ -10,10 +10,10 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 import sqlalchemy_utils
-from sqlalchemy.dialects import postgresql
+
 
 # revision identifiers, used by Alembic.
-revision: str = '4de8dcedeb0e'
+revision: str = 'cdec454b48b9'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -36,8 +36,7 @@ def upgrade() -> None:
     sa.Column('registered_at', sa.DateTime(), server_default=sa.text("TIMEZONE('utc', now())"), nullable=False),
     sa.Column('updated_at', sa.DateTime(), server_default=sa.text("TIMEZONE('utc', now())"), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False),
-    sa.Column('is_superuser', sa.Boolean(), nullable=False),
-    sa.Column('is_verified', sa.Boolean(), nullable=False),
+    sa.Column('is_admin', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('account_table',
@@ -57,11 +56,11 @@ def upgrade() -> None:
     sa.Column('description', sa.String(), nullable=False),
     sa.Column('author_id', sa.UUID(), nullable=True),
     sa.Column('responsible_id', sa.UUID(), nullable=True),
-    sa.Column('observers', postgresql.ARRAY(sa.UUID()), nullable=False),
-    sa.Column('performers', postgresql.ARRAY(sa.UUID()), nullable=False),
-    sa.Column('deadline', sa.DateTime(), nullable=False),
-    sa.Column('status', sa.Boolean(), nullable=False),
-    sa.Column('time_estimate', sa.String(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text("TIMEZONE('utc', now())"), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), server_default=sa.text("TIMEZONE('utc', now())"), nullable=False),
+    sa.Column('deadline', sa.String(), nullable=False),
+    sa.Column('status', sa.Enum('IN_PROCESS', 'FINISH', name='taskstatus'), nullable=False),
+    sa.Column('time_estimate', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['author_id'], ['user_table.id'], ondelete='SET NULL'),
     sa.ForeignKeyConstraint(['responsible_id'], ['user_table.id'], ondelete='SET NULL'),
     sa.PrimaryKeyConstraint('id'),
@@ -99,9 +98,21 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['account_id'], ['account_table.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('observers_table',
+    sa.Column('tasks_id', sa.UUID(), nullable=True),
+    sa.Column('users_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['tasks_id'], ['task_table.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['users_id'], ['user_table.id'], ondelete='SET NULL')
+    )
+    op.create_table('performers_table',
+    sa.Column('tasks_id', sa.UUID(), nullable=True),
+    sa.Column('users_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['tasks_id'], ['task_table.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['users_id'], ['user_table.id'], ondelete='SET NULL')
+    )
     op.create_table('secret_table',
     sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('password', sa.String(), nullable=False),
+    sa.Column('password', sa.LargeBinary(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text("TIMEZONE('utc', now())"), nullable=False),
     sa.Column('updated_at', sa.DateTime(), server_default=sa.text("TIMEZONE('utc', now())"), nullable=False),
     sa.Column('user_id', sa.UUID(), nullable=False),
@@ -153,6 +164,8 @@ def downgrade() -> None:
     op.drop_table('struct_adm_table')
     op.drop_table('member_table')
     op.drop_table('secret_table')
+    op.drop_table('performers_table')
+    op.drop_table('observers_table')
     op.drop_table('invite_table')
     op.drop_table('company_table')
     op.drop_table('user_position_table')

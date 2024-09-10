@@ -3,6 +3,8 @@ from typing import Optional
 from sqlalchemy import String, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from uuid import uuid4
+
+from src.schemas.company_schema import CompanyDB
 from src.models import BaseModel
 from src.models.mixins.custom_types import uuid_pk, created_at_ct, updated_at_ct
 from typing import TYPE_CHECKING
@@ -33,3 +35,7 @@ class CompanyModel(BaseModel):
                                                         cascade="all, delete", passive_deletes=True)
 
     __table_args__ = (UniqueConstraint("account_id"),)
+
+    def to_pydantic_schema(self) -> CompanyDB:
+        return CompanyDB(**self.__dict__)
+

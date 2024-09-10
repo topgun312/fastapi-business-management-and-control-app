@@ -2,6 +2,8 @@ from uuid import uuid4
 
 from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from src.schemas.struct_adm_position_schema import StructAdmPositionDB
 from src.models import BaseModel
 from src.models.mixins.custom_types import uuid_pk
 from typing import TYPE_CHECKING
@@ -28,3 +30,6 @@ class StructAdmPositionModel(BaseModel):
     )
 
     __table_args__ = (UniqueConstraint("struct_adm_id"),)
+
+    def to_pydantic_schema(self) -> StructAdmPositionDB:
+        return StructAdmPositionDB(**self.__dict__)

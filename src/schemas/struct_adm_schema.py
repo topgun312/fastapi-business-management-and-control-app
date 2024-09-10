@@ -1,20 +1,32 @@
-from pydantic import BaseModel, UUID4, Field
+from pydantic import BaseModel, UUID4, Field, ConfigDict
 from sqlalchemy_utils import LtreeType
 import datetime
 
+from src.schemas.response import BaseResponse
 
-class IdStructAdmSchema(BaseModel):
+
+class StructAdmId(BaseModel):
     id: UUID4
 
 
-class CreateStructAdmSchema(BaseModel):
+class CreateStructAdmRequest(BaseModel):
     name: str = Field(max_length=50)
     path: LtreeType
 
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
-class UpdateStructAdmSchema(IdStructAdmSchema, CreateStructAdmSchema): ...
+
+class UpdateStructAdmRequest(StructAdmId, CreateStructAdmRequest): ...
 
 
-class StructAdmSchema(IdStructAdmSchema, CreateStructAdmSchema):
+class StructAdmDB(StructAdmId, CreateStructAdmRequest):
     created_at: datetime.datetime
     updated_at: datetime.datetime
+
+
+class StructAdmResponse(BaseResponse):
+    payload: StructAdmDB
+
+
+class StructAdmListResponse(BaseResponse):
+    payload: list[StructAdmDB]

@@ -2,19 +2,29 @@ import datetime
 
 from pydantic import BaseModel, UUID4, Field
 
+from src.schemas.response import BaseResponse
 
-class IdPositionSchema(BaseModel):
+
+class PositionId(BaseModel):
     id: UUID4
 
 
-class CreatePositionSchema(BaseModel):
+class CreatePositionRequest(BaseModel):
     name: str = Field(max_length=50)
     description: str | None
 
 
-class UpdatePositionSchema(IdPositionSchema, CreatePositionSchema): ...
+class UpdatePositionRequest(PositionId, CreatePositionRequest): ...
 
 
-class PositionSchema(IdPositionSchema, CreatePositionSchema):
+class PositionDB(PositionId, CreatePositionRequest):
     created_at: datetime.datetime
     updated_at: datetime.datetime
+
+
+class PositionResponse(BaseResponse):
+    payload: PositionDB
+
+
+class PositionListResponse(BaseResponse):
+    payload: list[PositionDB]

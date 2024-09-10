@@ -1,6 +1,8 @@
 from sqlalchemy import String, Index, func, ForeignKey, Sequence, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship, remote, foreign
 from sqlalchemy_utils import LtreeType, Ltree
+
+from src.schemas.struct_adm_schema import StructAdmDB
 from src.models import BaseModel
 from src.models.mixins.custom_types import integer_pk, created_at_ct, updated_at_ct
 from typing import TYPE_CHECKING
@@ -46,8 +48,10 @@ class StructAdmModel(BaseModel):
         self.path = ltree_id if parent is None else parent.path + ltree_id
 
 
-
     __table_args__ = (Index("struct_path", path, postgresql_using="gist"),)
+
+    def to_pydantic_schema(self) -> StructAdmDB:
+        return StructAdmDB(**self.__dict__)
 
 
 

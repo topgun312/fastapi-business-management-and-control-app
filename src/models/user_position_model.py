@@ -2,6 +2,8 @@ from uuid import uuid4
 
 from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from src.schemas.user_position_schema import UserPositionDB
 from src.models import BaseModel
 from src.models.mixins.custom_types import uuid_pk
 from typing import TYPE_CHECKING
@@ -24,3 +26,6 @@ class UserPositionModel(BaseModel):
     position: Mapped["PositionModel"] = relationship(back_populates="user_position")
 
     __table_args__ = (UniqueConstraint("user_id"), UniqueConstraint("position_id"))
+
+    def to_pydantic_schema(self) -> UserPositionDB:
+        return UserPositionDB(**self.__dict__)

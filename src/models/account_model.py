@@ -2,6 +2,8 @@ from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy_utils import EmailType
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from uuid import uuid4
+
+from src.schemas.account_schema import AccountDB
 from src.models import BaseModel
 from src.models.mixins.custom_types import uuid_pk, created_at_ct, updated_at_ct
 from typing import TYPE_CHECKING
@@ -31,3 +33,7 @@ class AccountModel(BaseModel):
         back_populates="account", cascade="all, delete", passive_deletes=True
     )
     __table_args__ = (UniqueConstraint("user_id"),)
+
+    def to_pydantic_schema(self) -> AccountDB:
+        return AccountDB(**self.__dict__)
+
