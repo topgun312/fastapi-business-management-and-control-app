@@ -1,28 +1,28 @@
+
+from typing import TYPE_CHECKING
+
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from src.models.base_model import BaseModel
+from src.models.mixins.custom_types import integer_pk
 from src.schemas.position_schema import PositionDB
-from src.models import BaseModel
-from src.models.mixins.custom_types import uuid_pk, created_at_ct, updated_at_ct
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.models import UserPositionModel, StructAdmPositionModel
+    from src.models import StructAdmPositionModel, UserPositionModel
 
 
 class PositionModel(BaseModel):
-    __tablename__ = "position_table"
+    __tablename__ = 'position_table'
 
-    id: Mapped[uuid_pk]
-    name: Mapped[str] = mapped_column(String(50), nullable=False)
+    id: Mapped[integer_pk]
+    name: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     description: Mapped[str]
-    created_at: Mapped[created_at_ct]
-    updated_at: Mapped[updated_at_ct]
-    user_position: Mapped["UserPositionModel"] = relationship(
-        back_populates="position", cascade="all, delete", passive_deletes=True
+    user_position: Mapped['UserPositionModel'] = relationship(
+        back_populates='position', cascade='all, delete', passive_deletes=True,
     )
-    struct_adm_position: Mapped["StructAdmPositionModel"] = relationship(
-        back_populates="position", cascade="all, delete", passive_deletes=True
+    struct_adm_position: Mapped[list['StructAdmPositionModel']] = relationship(
+        back_populates='position', cascade='all, delete', passive_deletes=True,
     )
 
     def to_pydantic_schema(self) -> PositionDB:

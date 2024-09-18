@@ -6,6 +6,7 @@
 
 # Environments
 .env
+.env-non-dev
 .test.env
 .venv
 env/

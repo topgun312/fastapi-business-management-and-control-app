@@ -1,10 +1,10 @@
 import datetime
 
-from pydantic import BaseModel, UUID4, Field, EmailStr
+from pydantic import UUID4, BaseModel, EmailStr, Field
 
-from src.schemas.member_schema import MemberDB
 from src.schemas.account_schema import AccountDB
-from src.schemas.response import BaseResponse
+from src.schemas.member_schema import MemberDB
+from src.schemas.response import BaseResponse, BaseCreateResponse
 
 
 class UserId(BaseModel):
@@ -41,7 +41,7 @@ class UserAuthSchema(UserId):
 class Token(BaseModel):
     access_token: str
     refresh_token: str | None = None
-    token_type: str = "Bearer"
+    token_type: str = 'Bearer'
 
 
 class UserResponse(BaseResponse):
@@ -50,3 +50,7 @@ class UserResponse(BaseResponse):
 
 class UserListResponse(BaseResponse):
     payload: list[UserDB]
+
+
+class UserCreateResponse(BaseCreateResponse):
+    payload: UserDB

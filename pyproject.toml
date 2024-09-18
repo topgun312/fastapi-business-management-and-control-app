@@ -1,0 +1,40 @@
+[tool.ruff]
+line-length = 120
+exclude = ["alembic/*"]
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["ALL"]
+extend-select = ["W", "E"]
+preview = true
+ignore = [
+    "ARG001", # unused-function-argument
+    "ANN401", # any-type
+    "B008", # function-call-in-default-argument
+    "B904", # raise-without-from-inside-except
+    "BLE001", # blind-except
+    "CPY001", # missing-copyright-notice
+    "D100", # undocumented-public-module
+    "D101", # undocumented-public-class
+    "D102", # undocumented-public-method
+    "D103", # undocumented-public-function
+    "D104", # undocumented-public-package
+    "D105", # undocumented-magic-method
+    "D107", # undocumented-public-init
+    "D203", # one-blank-line-before-class
+    "D205", # blank-line-after-summary
+    "D213", # multi-line-summary-second-line
+    "D401", # non-imperative-mood
+    "DOC501", # docstring-missing-exception
+    "FAST002", # fast-api-non-annotated-dependency
+    "INP001", # implicit-namespace-package
+    "RUF009", # function-call-in-dataclass-default-argument
+    "S101", # assert
+    "S608", # hardcoded-sql-expression
+]
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "single"
+
+[tool.ruff.lint.pylint]
+max-args = 7

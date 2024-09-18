@@ -1,4 +1,4 @@
-__all__ = ["WorkDataService", "CompanyRegService", "MemberService"]
+__all__ = ['CompanyRegService', 'MemberService', 'WorkDataService']
 
 from src.api.users.v1.service.company_reg_service import CompanyRegService
 from src.api.users.v1.service.member_reg_service import MemberService

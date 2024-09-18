@@ -1,21 +1,22 @@
 import functools
-from abc import abstractmethod, ABC
-from collections.abc import Callable, Awaitable
+from abc import ABC, abstractmethod
+from collections.abc import Awaitable, Callable
 from types import TracebackType
 from typing import Any
+
 from src.database.db import async_session_maker
 from src.repositories import (
-    UserRepository,
-    UserPositionRepository,
-    PositionRepository,
-    SecretRepository,
+    AccountRepository,
+    CompanyRepository,
     InviteRepository,
     MemberRepository,
-    CompanyRepository,
-    StructAdmRepository,
+    PositionRepository,
+    SecretRepository,
     StructAdmPositionRepository,
-    AccountRepository,
+    StructAdmRepository,
     TaskRepository,
+    UserPositionRepository,
+    UserRepository,
 )
 
 AsyncFunc = Callable[..., Awaitable[Any]]

@@ -1,7 +1,6 @@
-import datetime
-from pydantic import BaseModel, UUID4
+from pydantic import UUID4, BaseModel
 
-from src.schemas.response import BaseResponse
+from src.schemas.response import BaseResponse, BaseCreateResponse
 
 
 class SecretId(BaseModel):
@@ -15,9 +14,7 @@ class CreateSecretRequest(BaseModel):
 class UpdateSecretRequest(SecretId, CreateSecretRequest): ...
 
 
-class SecretDB(SecretId, CreateSecretRequest):
-    created_at: datetime.datetime
-    updated_at: datetime.datetime
+class SecretDB(SecretId, CreateSecretRequest): ...
 
 
 class SecretResponse(BaseResponse):
@@ -26,3 +23,7 @@ class SecretResponse(BaseResponse):
 
 class SecretListResponse(BaseResponse):
     payload: list[SecretDB]
+
+
+class SecretCreateResponse(BaseCreateResponse):
+    payload: SecretDB

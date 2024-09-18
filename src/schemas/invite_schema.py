@@ -1,7 +1,6 @@
 from pydantic import UUID4, BaseModel, Field
-import datetime
 
-from src.schemas.response import BaseResponse
+from src.schemas.response import BaseResponse, BaseCreateResponse
 
 
 class InviteId(BaseModel):
@@ -13,12 +12,7 @@ class CreateInviteRequest(BaseModel):
     user_id: UUID4
 
 
-class UpdateInviteRequest(InviteId, CreateInviteRequest): ...
-
-
-class InviteDB(InviteId, CreateInviteRequest):
-    created_at: datetime.datetime
-    updated_at: datetime.datetime
+class InviteDB(InviteId, CreateInviteRequest): ...
 
 
 class InviteResponse(BaseResponse):
@@ -27,3 +21,6 @@ class InviteResponse(BaseResponse):
 
 class InviteListResponse(BaseResponse):
     payload: list[InviteDB]
+
+class InviteCreateResponse(BaseCreateResponse):
+    payload: InviteDB

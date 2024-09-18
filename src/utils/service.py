@@ -1,5 +1,7 @@
-from typing import Optional, Union, Any, Sequence
-from uuid import uuid4
+from collections.abc import Sequence
+from typing import Any
+
+from pydantic import UUID4
 
 from src.utils.unit_of_work import UnitOfWork, transaction_mode
 
@@ -15,7 +17,7 @@ class BaseService:
         await self.uow.__dict__[self.base_repository].add_one(**kwargs)
 
     @transaction_mode
-    async def add_one_and_get_id(self, **kwargs) -> Union[int, str]:
+    async def add_one_and_get_id(self, **kwargs) -> int | str:
         _id = await self.uow.__dict__[self.base_repository].add_one_and_get_id(**kwargs)
         return _id
 
@@ -25,9 +27,9 @@ class BaseService:
         return _obj
 
     @transaction_mode
-    async def get_bu_query_one_or_none(self, **kwargs) -> Optional[Any]:
+    async def get_bu_query_one_or_none(self, **kwargs) -> Any | None:
         _result = await self.uow.__dict__[self.base_repository].get_by_query_one_or_none(
-                **kwargs
+                **kwargs,
             )
         return _result
 
@@ -38,10 +40,10 @@ class BaseService:
 
     @transaction_mode
     async def update_one_by_id(
-        self, _id: Union[int, str, uuid4], values: dict
+        self, _id: int | str | UUID4, values: dict,
     ) -> Any:
         _obj = await self.uow.__dict__[self.base_repository].update_one_by_id(
-                _id=_id, values=values
+                _id=_id, values=values,
             )
 
     @transaction_mode

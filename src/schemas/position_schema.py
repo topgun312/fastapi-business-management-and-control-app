@@ -1,12 +1,10 @@
-import datetime
+from pydantic import BaseModel, Field
 
-from pydantic import BaseModel, UUID4, Field
-
-from src.schemas.response import BaseResponse
+from src.schemas.response import BaseResponse, BaseCreateResponse
 
 
 class PositionId(BaseModel):
-    id: UUID4
+    id: int
 
 
 class CreatePositionRequest(BaseModel):
@@ -17,9 +15,10 @@ class CreatePositionRequest(BaseModel):
 class UpdatePositionRequest(PositionId, CreatePositionRequest): ...
 
 
-class PositionDB(PositionId, CreatePositionRequest):
-    created_at: datetime.datetime
-    updated_at: datetime.datetime
+class UpdatePositionRequestByName(CreatePositionRequest): ...
+
+
+class PositionDB(PositionId, CreatePositionRequest): ...
 
 
 class PositionResponse(BaseResponse):
@@ -28,3 +27,7 @@ class PositionResponse(BaseResponse):
 
 class PositionListResponse(BaseResponse):
     payload: list[PositionDB]
+
+
+class PositionCreateResponse(BaseCreateResponse):
+    payload: PositionDB
