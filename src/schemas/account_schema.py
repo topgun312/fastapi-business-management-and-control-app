@@ -1,7 +1,6 @@
-import datetime
-from pydantic import BaseModel, UUID4, EmailStr
+from pydantic import UUID4, BaseModel, EmailStr
 
-from src.schemas.response import BaseResponse
+from src.schemas.response import BaseResponse, BaseCreateResponse
 
 
 class AccountId(BaseModel):
@@ -13,15 +12,13 @@ class CreateAccountRequest(BaseModel):
 
 
 class UpdateAccountRequestByID(AccountId, CreateAccountRequest):
-    user_id: UUID4
+    user_id: UUID4 | None
 
 
 class UpdateAccountRequestByEmail(CreateAccountRequest): ...
 
 
-class AccountDB(AccountId, CreateAccountRequest):
-    created_at: datetime.datetime
-    updated_at: datetime.datetime
+class AccountDB(UpdateAccountRequestByID): ...
 
 
 class AccountResponse(BaseResponse):
@@ -30,3 +27,7 @@ class AccountResponse(BaseResponse):
 
 class AccountListResponse(BaseResponse):
     payload: list[AccountDB]
+
+
+class AccountCreateResponse(BaseCreateResponse):
+    payload: AccountDB

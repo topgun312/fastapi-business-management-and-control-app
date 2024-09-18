@@ -1,8 +1,8 @@
-from abc import abstractmethod, ABC
-from typing import Sequence, Union
-from uuid import uuid4
+from abc import ABC, abstractmethod
+from collections.abc import Sequence
 
-from sqlalchemy import insert, select, update, delete
+from pydantic import UUID4
+from sqlalchemy import delete, insert, select, update
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -51,7 +51,7 @@ class SQLAlchemyRepository(AbstractRepository):
         query = insert(self.model).values(**kwargs)
         await self.session.execute(query)
 
-    async def add_one_and_get_id(self, **kwargs) -> Union[int, str, uuid4]:
+    async def add_one_and_get_id(self, **kwargs) -> int | UUID4:
         query = insert(self.model).values(**kwargs).returning(self.model.id)
         _id: Result = await self.session.execute(query)
         return _id.scalar_one()
@@ -72,11 +72,23 @@ class SQLAlchemyRepository(AbstractRepository):
         return res.scalars().all()
 
     async def update_one_by_id(
-        self, _id: Union[int, str, uuid4], values: dict
+        self, _id: int | UUID4, **values,
     ) -> type(model) | None:
         query = (
             update(self.model)
             .filter(self.model.id == _id)
+            .values(**values)
+            .returning(self.model)
+        )
+        _obj: Result | None = await self.session.execute(query)
+        return _obj.scalar_one_or_none()
+
+    async def update_one_by_name(
+        self, _name: str, **values,
+    ) -> type(model) | None:
+        query = (
+            update(self.model)
+            .filter(self.model.name == _name)
             .values(**values)
             .returning(self.model)
         )

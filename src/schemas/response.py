@@ -1,10 +1,11 @@
 from pydantic import BaseModel
-
-from starlette.status import HTTP_200_OK
+from fastapi import status
 
 
 class BaseResponse(BaseModel):
-    status: int = HTTP_200_OK
+    status: int = status.HTTP_200_OK
     error: bool = False
 
-
+class BaseCreateResponse(BaseModel):
+    status: int = status.HTTP_201_CREATED
+    error: bool = False

@@ -1,8 +1,8 @@
 import datetime
 
-from pydantic import BaseModel, Field, UUID4
+from pydantic import UUID4, BaseModel, Field
 
-from src.schemas.response import BaseResponse
+from src.schemas.response import BaseResponse, BaseCreateResponse
 
 
 class CompanyId(BaseModel):
@@ -16,7 +16,7 @@ class CreateCompanyRequest(BaseModel):
     website: str = Field(max_length=30)
 
 
-class UpdateCompanyRequest(CompanyId, CreateCompanyRequest): ...
+class UpdateCompanyRequest(CreateCompanyRequest): ...
 
 
 class CompanyDB(CompanyId, CreateCompanyRequest):
@@ -30,3 +30,7 @@ class CompanyResponse(BaseResponse):
 
 class CompanyListResponse(BaseResponse):
     payload: list[CompanyDB]
+
+
+class CompanyCreateResponse(BaseCreateResponse):
+    payload: CompanyDB

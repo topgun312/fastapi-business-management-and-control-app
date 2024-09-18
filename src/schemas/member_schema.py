@@ -1,8 +1,6 @@
-import datetime
+from pydantic import UUID4, BaseModel
 
-from pydantic import BaseModel, UUID4
-
-from src.schemas.response import BaseResponse
+from src.schemas.response import BaseResponse, BaseCreateResponse
 
 
 class MemberId(BaseModel):
@@ -17,9 +15,7 @@ class CreateMemberRequest(BaseModel):
 class UpdateMemberRequest(MemberId, CreateMemberRequest): ...
 
 
-class MemberDB(MemberId, CreateMemberRequest):
-    created_at: datetime.datetime
-    updated_at: datetime.datetime
+class MemberDB(MemberId, CreateMemberRequest): ...
 
 
 class MemberResponse(BaseResponse):
@@ -30,4 +26,5 @@ class MemberListResponse(BaseResponse):
     payload: list[MemberDB]
 
 
-
+class MemberCreateResponse(BaseCreateResponse):
+    payload: MemberDB

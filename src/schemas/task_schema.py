@@ -1,16 +1,17 @@
 import datetime
 from enum import Enum
 
-from pydantic import BaseModel, UUID4, Field, model_validator
+
+from pydantic import UUID4, BaseModel, Field, model_validator
 from typing_extensions import Self
 
-from src.schemas.response import BaseResponse
+from src.schemas.response import BaseResponse, BaseCreateResponse
 from src.schemas.user_schema import UserId
 
 
 class TaskStatus(str, Enum):
-    IN_PROCESS = "TASK IN PROCESS"
-    FINISH = "FINISH TASK"
+    IN_PROCESS = 'TASK IN PROCESS'
+    FINISH = 'FINISH TASK'
 
 
 class TaskId(BaseModel):
@@ -24,11 +25,11 @@ class CreateTaskRequest(BaseModel):
     responsible_id: UUID4
     observers: list[UserId] = Field(default_factory=list)
     performers: list[UserId] = Field(default_factory=list)
-    deadline: str = Field(default="")
+    deadline: str = Field(default='')
     status: TaskStatus
     time_estimate: int
 
-    @model_validator(mode="after")
+    @model_validator(mode='after')
     def create_deadline(self) -> Self:
         today = datetime.datetime.utcnow()
         deadline_time = today + datetime.timedelta(hours=self.time_estimate)
@@ -49,3 +50,6 @@ class TaskResponse(BaseResponse):
 class TaskListResponse(BaseResponse):
     payload: list[TaskDB]
 
+
+class TaskCreateResponse(BaseCreateResponse):
+    payload: TaskDB

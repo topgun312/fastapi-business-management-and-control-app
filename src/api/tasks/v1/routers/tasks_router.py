@@ -1,66 +1,68 @@
-
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
+from fastapi_cache.decorator import cache
 from pydantic import UUID4
+
 from src.api.tasks.v1.service import TasksService
-from src.models import TaskModel
-from src.schemas.task_schema import CreateTaskRequest, UpdateTaskRequest, TaskResponse, TaskListResponse
+from src.api.users.v1.auth_utils.validate import get_current_active_auth_user, get_current_admin_auth_user
+from src.schemas.task_schema import CreateTaskRequest, TaskDB, TaskListResponse, TaskResponse, UpdateTaskRequest, TaskCreateResponse
+from src.schemas.user_schema import UserAuthSchema
+
+router = APIRouter(prefix='/tasks', tags=['Tasks work'])
 
 
-router = APIRouter(prefix="/tasks", tags=["Tasks work"])
-
-
-@router.get("/get_task/{task_id}")
-async def get_task(task_id: UUID4, service: TasksService = Depends(TasksService)) -> TaskResponse:
+@router.get('/get_task/{task_id}', status_code=status.HTTP_200_OK)
+@cache(expire=3600)
+async def get_task(task_id: UUID4,
+                   active_account: UserAuthSchema = Depends(get_current_active_auth_user),
+                   service: TasksService = Depends(TasksService)) -> TaskResponse:
+  """Get task by id
   """
-  Get task by id
+  if active_account:
+    task: TaskDB | None = await service.get_task_by_id(task_id)
+    return TaskResponse(payload=task)
+
+
+@router.get('/get_tasks', status_code=status.HTTP_200_OK)
+@cache(expire=3600)
+async def get_all_tasks(active_account: UserAuthSchema = Depends(get_current_active_auth_user),
+                        service: TasksService = Depends(TasksService)) -> TaskListResponse:
+  """Get all tasks
   """
-  task: TaskModel | None = await service.get_task_by_id(task_id)
-  return TaskResponse(payload=task)
+  if active_account:
+    tasks: list[TaskDB] | None = await service.get_all_tasks()
+    return TaskListResponse(payload=tasks)
 
 
-@router.get("/get_tasks")
-async def get_all_tasks(service: TasksService = Depends(TasksService)) -> TaskListResponse:
-  """
-  Get all tasks
-  """
-  tasks: list[TaskModel] | None = await service.get_all_tasks()
-  return TaskListResponse(payload=tasks)
-
-
-@router.post("/create_task")
+@router.post('/create_task', status_code=status.HTTP_201_CREATED)
 async def create_task(task_data: CreateTaskRequest,
-                      service: TasksService = Depends(TasksService)) -> TaskResponse:
+                      admin: UserAuthSchema = Depends(get_current_admin_auth_user),
+                      service: TasksService = Depends(TasksService)) -> TaskCreateResponse:
+  """Create task
   """
-  Create task
-  """
-  created_task: TaskModel = await service.create_task(task_data.model_dump())
-  return TaskResponse(payload=created_task)
+  if admin:
+    created_task: TaskDB = await service.create_task(task_data.model_dump())
+    return TaskCreateResponse(payload=created_task)
 
 
-
-@router.put("/update_task/{task_id}")
+@router.put('/update_task/{task_id}', status_code=status.HTTP_200_OK)
 async def update_task(task_id: UUID4, task_data: UpdateTaskRequest,
+                      admin: UserAuthSchema = Depends(get_current_admin_auth_user),
                       service: TasksService = Depends(TasksService)) -> TaskResponse:
+  """Update task by id
   """
-  Update task by id
-  """
-  updated_task: TaskModel = await service.update_task(task_id, task_data.model_dump())
-  return TaskResponse(payload=updated_task)
+  if admin:
+    updated_task: TaskDB = await service.update_task(task_id, task_data.model_dump())
+    return TaskResponse(payload=updated_task)
 
 
-@router.delete("/delete_task/{task_id}")
-async def delete_task(task_id: UUID4, service: TasksService = Depends(TasksService)) -> dict[str, int | str]:
+@router.delete('/delete_task/{task_id}', status_code=status.HTTP_204_NO_CONTENT)
+async def delete_task(task_id: UUID4,
+                      admin: UserAuthSchema = Depends(get_current_admin_auth_user),
+                      service: TasksService = Depends(TasksService)) -> None:
+  """Delete task by id
   """
-  Delete task by id
-  """
-  await service.delete_task(task_id)
-  return {"status_code": 200, "detail": "The task success delete"}
+  if admin:
+    await service.delete_task(task_id)
 
 
-@router.delete("/delete_tasks")
-async def delete_all_tasks(service: TasksService = Depends(TasksService)) -> dict[str, int | str]:
-  """
-  Delete all tasks
-  """
-  await service.delete_all_tasks()
-  return {"status_code": 200, "detail": "The all tasks success delete"}
+

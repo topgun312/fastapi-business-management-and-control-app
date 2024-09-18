@@ -1,6 +1,6 @@
-from pydantic import BaseModel, UUID4
+from pydantic import UUID4, BaseModel
 
-from src.schemas.response import BaseResponse
+from src.schemas.response import BaseResponse, BaseCreateResponse
 
 
 class UserPositionId(BaseModel):
@@ -8,14 +8,16 @@ class UserPositionId(BaseModel):
 
 
 class CreateUserPositionRequest(BaseModel):
-    user_id: UUID4
-    position_id: UUID4
+    user_id: list[UUID4]
+    position_id: int
 
 
 class UpdateUserPositionRequest(UserPositionId, CreateUserPositionRequest): ...
 
 
-class UserPositionDB(UserPositionId, CreateUserPositionRequest): ...
+class UserPositionDB(UserPositionId):
+    user_id: UUID4
+    position_id: int
 
 
 class UserPositionResponse(BaseResponse):
@@ -24,3 +26,7 @@ class UserPositionResponse(BaseResponse):
 
 class UserPositionListResponse(BaseResponse):
     payload: list[UserPositionDB]
+
+
+class UserPositionCreateResponse(BaseCreateResponse):
+    payload: UserPositionDB
