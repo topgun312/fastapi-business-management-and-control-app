@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 from uuid import uuid4
 
-from sqlalchemy import Column, Enum, ForeignKey, String, Table, UniqueConstraint
+from sqlalchemy import Column, Enum, ForeignKey, String, Table, UniqueConstraint, nulls_last
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base_model import BaseModel
@@ -47,7 +47,7 @@ class TaskModel(BaseModel):
             back_populates='responsible', foreign_keys='TaskModel.responsible_id',
         )
 
-        __table_args__ = (UniqueConstraint('author_id'), UniqueConstraint('responsible_id'))
+        __table_args__ = (UniqueConstraint('responsible_id'),)
 
         def to_pydantic_schema(self) -> TaskDB:
             return TaskDB(**self.__dict__)

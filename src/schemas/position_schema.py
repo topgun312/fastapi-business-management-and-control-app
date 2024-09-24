@@ -31,3 +31,9 @@ class PositionListResponse(BaseResponse):
 
 class PositionCreateResponse(BaseCreateResponse):
     payload: PositionDB
+
+
+class TestPositionSchema(BaseModel):
+    id: int
+    name: str = Field(max_length=50)
+    description: str | None

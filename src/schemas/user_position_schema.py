@@ -30,3 +30,9 @@ class UserPositionListResponse(BaseResponse):
 
 class UserPositionCreateResponse(BaseCreateResponse):
     payload: UserPositionDB
+
+
+class TestUserPositionSchema(BaseModel):
+    id: UUID4
+    user_id: list[UUID4]
+    position_id: int

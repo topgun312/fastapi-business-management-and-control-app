@@ -10,7 +10,7 @@ from src.schemas.user_schema import UpdateUserRequest, UserAuthSchema, UserRespo
 router = APIRouter(prefix='/work_data', tags=['Work with member data'])
 
 
-@router.put('/email_update', status_code=status.HTTP_200_OK)
+@router.put('/email_update/{email}', status_code=status.HTTP_200_OK)
 async def update_account_email(
     email: EmailStr,
     update_data: UpdateAccountRequestByEmail,
@@ -26,7 +26,7 @@ async def update_account_email(
         return AccountResponse(payload=account)
 
 
-@router.put('/user_update', status_code=status.HTTP_200_OK)
+@router.put('/user_update/{first_name}/{last_name}', status_code=status.HTTP_200_OK)
 async def update_user_first_and_last_name(
     first_name: str,
     last_name: str,

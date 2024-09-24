@@ -17,7 +17,7 @@ from src.schemas.user_schema import UserAuthSchema
 router = APIRouter(prefix='/structure', tags=['Work Structure'])
 
 
-@router.post('/create_department', status_code=status.HTTP_201_CREATED)
+@router.post('/create_department/{company_name}', status_code=status.HTTP_201_CREATED)
 async def create_department(company_name: str,
                             struct_adm_data: CreateStructAdmRequest,
                             admin: UserAuthSchema = Depends(get_current_admin_auth_user),
@@ -109,7 +109,7 @@ async def add_position_to_department(struct_adm_pos_data: CreateStructAdmPositio
     return struct_adm_pos
 
 
-@router.put('/add_department_head', status_code=status.HTTP_200_OK)
+@router.put('/add_department_head/{user_id}/{struct_adm_name}', status_code=status.HTTP_200_OK)
 async def add_department_head(user_id: UUID4, struct_adm_name: str,
                               admin: UserAuthSchema = Depends(get_current_admin_auth_user),
                               service: WorkStructureService = Depends(WorkStructureService)) -> StructAdmDB:

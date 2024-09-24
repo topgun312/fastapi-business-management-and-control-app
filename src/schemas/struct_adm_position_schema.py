@@ -32,3 +32,9 @@ class StructAdmPositionListResponse(BaseResponse):
 
 class StructAdmPositionCreateResponse(BaseCreateResponse):
     payload: StructAdmPositionDB
+
+
+class TestStructAdmPositionSchema(BaseModel):
+    id: UUID4
+    struct_adm_id: int
+    position_id: int

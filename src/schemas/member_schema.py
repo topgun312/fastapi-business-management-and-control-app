@@ -28,3 +28,9 @@ class MemberListResponse(BaseResponse):
 
 class MemberCreateResponse(BaseCreateResponse):
     payload: MemberDB
+
+
+class TestMemberSchema(BaseModel):
+    id: UUID4
+    user_id: UUID4
+    company_id: UUID4

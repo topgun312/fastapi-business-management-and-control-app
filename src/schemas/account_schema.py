@@ -31,3 +31,9 @@ class AccountListResponse(BaseResponse):
 
 class AccountCreateResponse(BaseCreateResponse):
     payload: AccountDB
+
+
+class TestAccountSchema(BaseModel):
+    id: UUID4
+    email: EmailStr
+    user_id: UUID4 | None

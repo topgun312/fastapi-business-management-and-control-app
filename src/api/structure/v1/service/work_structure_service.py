@@ -70,6 +70,8 @@ class WorkStructureService(BaseService):
     """Delete department of company by name
     """
     children: Sequence[Row[tuple[Any, ...] | Any]] = await self.uow.struct_adm.get_children_paths(struct_adm_name=struct_adm_name)
+    department: StructAdmModel = await self.uow.struct_adm.get_by_query_one_or_none(name=struct_adm_name)
+    self._check_department_exists(department=department)
     await self.uow.struct_adm.change_children_paths(children)
     await self.uow.struct_adm.delete_by_query(name=struct_adm_name)
 

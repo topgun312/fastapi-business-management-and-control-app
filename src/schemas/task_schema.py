@@ -4,7 +4,6 @@ from enum import Enum
 
 from pydantic import UUID4, BaseModel, Field, model_validator
 from typing_extensions import Self
-
 from src.schemas.response import BaseResponse, BaseCreateResponse
 from src.schemas.user_schema import UserId
 
@@ -53,3 +52,24 @@ class TaskListResponse(BaseResponse):
 
 class TaskCreateResponse(BaseCreateResponse):
     payload: TaskDB
+
+
+class TestTaskSchema(BaseModel):
+    id: UUID4
+    title: str
+    description: str
+    author_id: UUID4
+    responsible_id: UUID4
+    deadline: str
+    status: TaskStatus
+    time_estimate: int
+
+
+class TestObserversSchema(BaseModel):
+    tasks_id: UUID4
+    users_id: UUID4
+
+
+class TestPerformersSchema(BaseModel):
+    tasks_id: UUID4
+    users_id: UUID4

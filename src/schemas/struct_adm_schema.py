@@ -1,4 +1,5 @@
-from pydantic import UUID4, BaseModel, Field
+from pydantic import UUID4, BaseModel, Field, ConfigDict
+from sqlalchemy_utils import Ltree
 
 from src.schemas.response import BaseResponse, BaseCreateResponse
 
@@ -38,3 +39,11 @@ class StructAdmListResponse(BaseResponse):
 
 class StructAdmCreateResponse(BaseCreateResponse):
     payload: StructAdmDB
+
+
+class TestStructAdmSchema(BaseModel):
+    id: int
+    name: str = Field(max_length=50)
+    company_id: UUID4
+    head_user_id: UUID4 | None
+    path: str

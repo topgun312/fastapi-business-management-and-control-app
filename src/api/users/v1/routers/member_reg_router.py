@@ -1,3 +1,5 @@
+from schemas.invite_schema import InviteCode
+from schemas.secret_schema import CreateSecretRequest
 from src.api.users.v1.service import MemberService
 from fastapi import APIRouter, BackgroundTasks, Depends, status
 from fastapi_cache.decorator import cache
@@ -34,7 +36,7 @@ async def add_member_to_company(
 
 @router.post('/add_password', status_code=status.HTTP_201_CREATED)
 async def add_password_and_end_registration(
-    invite_code: int, password: str,
+    invite_code: InviteCode, password: CreateSecretRequest,
     admin: UserAuthSchema = Depends(get_current_admin_auth_user),
     service: MemberService = Depends(MemberService),
 ) -> UserCreateResponse:
@@ -42,7 +44,7 @@ async def add_password_and_end_registration(
     """
     if admin:
         user_reg: UserDB = await service.enter_password_for_registration(
-            code=invite_code, password=password,
+            code=invite_code.model_dump(), password=password.model_dump(),
         )
         return UserCreateResponse(payload=user_reg)
 
@@ -58,13 +60,3 @@ async def get_member_info_by_user_id(user_id: UUID4,
         user: UserDB = await service.get_member_info_by_id(user_id=user_id)
         return UserResponse(payload=user)
 
-
-@router.get('/get_all_users_info', status_code=status.HTTP_200_OK)
-@cache(expire=3600)
-async def get_all_members_info(admin: UserAuthSchema = Depends(get_current_admin_auth_user),
-                                service: MemberService = Depends(MemberService)) -> list[UserDB]:
-    """Get info about all members in company
-    """
-    if admin:
-        users: list[UserDB] | None = await service.get_all_members_info()
-        return users

@@ -16,7 +16,7 @@ class CreateCompanyRequest(BaseModel):
     website: str = Field(max_length=30)
 
 
-class UpdateCompanyRequest(CreateCompanyRequest): ...
+class UpdateCompanyRequest(CompanyId, CreateCompanyRequest): ...
 
 
 class CompanyDB(CompanyId, CreateCompanyRequest):
@@ -34,3 +34,12 @@ class CompanyListResponse(BaseResponse):
 
 class CompanyCreateResponse(BaseCreateResponse):
     payload: CompanyDB
+
+
+class TestCompanySchema(BaseModel):
+    id: UUID4
+    name: str = Field(max_length=100)
+    address: str = Field(max_length=100)
+    description: str
+    website: str = Field(max_length=30)
+    account_id: UUID4

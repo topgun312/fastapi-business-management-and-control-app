@@ -7,9 +7,12 @@ class InviteId(BaseModel):
     id: UUID4
 
 
-class CreateInviteRequest(BaseModel):
-    code: int = Field(max_length=4)
-    user_id: UUID4
+class InviteCode(BaseModel):
+    code: int
+
+
+class CreateInviteRequest(InviteCode):
+    account_id: UUID4
 
 
 class InviteDB(InviteId, CreateInviteRequest): ...
@@ -24,3 +27,9 @@ class InviteListResponse(BaseResponse):
 
 class InviteCreateResponse(BaseCreateResponse):
     payload: InviteDB
+
+
+class TestInviteSchema(BaseModel):
+    id: UUID4
+    code: int
+    account_id: UUID4

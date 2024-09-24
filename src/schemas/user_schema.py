@@ -25,8 +25,6 @@ class UpdateUserRequest(CreateUserRequest): ...
 class UserDB(UserId, UserBase):
     registered_at: datetime.datetime
     updated_at: datetime.datetime
-    is_active: bool
-    is_admin: bool
     account: AccountDB
     member: MemberDB
 
@@ -54,3 +52,12 @@ class UserListResponse(BaseResponse):
 
 class UserCreateResponse(BaseCreateResponse):
     payload: UserDB
+
+
+class TestUserSchema(BaseModel):
+    first_name: str = Field(max_length=30)
+    last_name: str = Field(max_length=30)
+    id: UUID4
+    is_active: bool
+    is_admin: bool
+

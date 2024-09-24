@@ -29,7 +29,7 @@ async def get_check_account(
     }
 
 
-@router.post('/sign_up', status_code=status.HTTP_200_OK)
+@router.get('/sign_up', status_code=status.HTTP_200_OK)
 async def sign_up(
     account: EmailStr,
     invite_code: int,

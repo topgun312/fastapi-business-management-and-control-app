@@ -27,3 +27,10 @@ class SecretListResponse(BaseResponse):
 
 class SecretCreateResponse(BaseCreateResponse):
     payload: SecretDB
+
+
+class TestSecretSchema(BaseModel):
+    id: UUID4
+    password: bytes
+    user_id: UUID4
+    account_id: UUID4

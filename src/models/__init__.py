@@ -10,6 +10,8 @@ __all__ = [
     'TaskModel',
     'User',
     'UserPositionModel',
+    'performers_table',
+    'observers_table'
 ]
 
 
@@ -21,6 +23,6 @@ from src.models.position_model import PositionModel
 from src.models.secret_model import SecretModel
 from src.models.struct_adm_model import StructAdmModel
 from src.models.struct_adm_position_model import StructAdmPositionModel
-from src.models.task_model import TaskModel
+from src.models.task_model import TaskModel, observers_table, performers_table
 from src.models.user_model import User
 from src.models.user_position_model import UserPositionModel

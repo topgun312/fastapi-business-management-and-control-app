@@ -1,5 +1,3 @@
-from collections.abc import Sequence
-
 from src.api.users.v1.user_utils.invite_utils import create_invite_code
 from fastapi import BackgroundTasks, HTTPException, status
 
@@ -49,17 +47,16 @@ class MemberService(BaseService):
 
     @transaction_mode
     async def enter_password_for_registration(
-        self, code: int, password: str,
+        self, code: dict, password: dict,
     ) -> UserDB:
       """Add password and end registration
       """
-      invite_code: InviteModel = await self.uow.invite.get_by_query_one_or_none(code=code)
+      invite_code: InviteModel = await self.uow.invite.get_by_query_one_or_none(code=code['code'])
       self._check_invite_exists(invite_code)
       account: AccountModel = await self.uow.account.get_by_query_one_or_none(invite=invite_code)
       await self.uow.secret.add_one(
-                    password=await auth_utils.hash_password(password), user_id=account.user_id, account_id=account.id,
+                    password=await auth_utils.hash_password(password['password']), user_id=account.user_id, account_id=account.id,
             )
-
       user: User = await self.uow.user.get_by_query_one_or_none(account=account)
       return self._correct_user_schema_answer(user=user)
 
@@ -71,12 +68,6 @@ class MemberService(BaseService):
       self._check_user_exists(user=user)
       return self._correct_user_schema_answer(user=user)
 
-    @transaction_mode
-    async def get_all_members_info(self, **kwargs) -> Sequence[UserDB]:
-      """Get info about all members in company
-      """
-      users: Sequence[User] = await self.uow.user.get_by_query_all(**kwargs)
-      return [self._correct_user_schema_answer(user=user) for user in users]
 
     def _correct_user_schema_answer(self, user: User) -> UserDB:
       """Get correct answer with schema UserDB
