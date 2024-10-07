@@ -13,14 +13,14 @@ if TYPE_CHECKING:
 
 
 class InviteModel(BaseModel):
-    __tablename__ = 'invite_table'
+    __tablename__ = "invite_table"
 
     id: Mapped[uuid_pk]
     code: Mapped[int] = mapped_column(nullable=False)
     account_id: Mapped[uuid4] = mapped_column(
-        ForeignKey('account_table.id', ondelete='CASCADE'),
+        ForeignKey("account_table.id", ondelete="CASCADE"),
     )
-    account: Mapped['AccountModel'] = relationship(back_populates='invite')
+    account: Mapped["AccountModel"] = relationship(back_populates="invite")
 
     def to_pydantic_schema(self) -> InviteDB:
         return InviteDB(**self.__dict__)

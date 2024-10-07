@@ -1,6 +1,6 @@
 from pydantic import UUID4, BaseModel
 
-from src.schemas.response import BaseResponse, BaseCreateResponse
+from src.schemas.response import BaseCreateResponse, BaseResponse
 
 
 class MemberId(BaseModel):

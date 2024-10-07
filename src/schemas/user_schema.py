@@ -4,7 +4,7 @@ from pydantic import UUID4, BaseModel, EmailStr, Field
 
 from src.schemas.account_schema import AccountDB
 from src.schemas.member_schema import MemberDB
-from src.schemas.response import BaseResponse, BaseCreateResponse
+from src.schemas.response import BaseCreateResponse, BaseResponse
 
 
 class UserId(BaseModel):
@@ -39,7 +39,7 @@ class UserAuthSchema(UserId):
 class Token(BaseModel):
     access_token: str
     refresh_token: str | None = None
-    token_type: str = 'Bearer'
+    token_type: str = "Bearer"
 
 
 class UserResponse(BaseResponse):
@@ -60,4 +60,3 @@ class TestUserSchema(BaseModel):
     id: UUID4
     is_active: bool
     is_admin: bool
-

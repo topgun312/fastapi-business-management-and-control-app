@@ -1,13 +1,12 @@
 from datetime import timedelta
 
 from src.api.users.v1.auth_utils import utils as auth_utils
-
 from src.config import settings
 from src.schemas.user_schema import UserAuthSchema
 
-TOKEN_TYPE_FIELD = 'token_type'
-ACCESS_TOKEN_TYPE = 'access_token'
-REFRESH_TOKEN_TYPE = 'refresh_token'
+TOKEN_TYPE_FIELD = "token_type"
+ACCESS_TOKEN_TYPE = "access_token"
+REFRESH_TOKEN_TYPE = "refresh_token"
 
 
 def create_jwt(
@@ -16,8 +15,7 @@ def create_jwt(
     expire_minutes: int = settings.auth_jwt.access_token_expire_minutes,
     expire_timedelta: timedelta | None = None,
 ) -> str:
-    """Create JWT
-    """
+    """Create JWT"""
     jwt_payload = {TOKEN_TYPE_FIELD: token_type}
     jwt_payload.update(token_data)
     return auth_utils.encode_jwt(
@@ -28,12 +26,11 @@ def create_jwt(
 
 
 def create_access_token(user: UserAuthSchema) -> str:
-    """Create access token
-    """
+    """Create access token"""
     jwt_payload = {
-        'sub': user.username,
-        'username': user.username,
-        'is_active': user.is_active,
+        "sub": user.username,
+        "username": user.username,
+        "is_active": user.is_active,
     }
     return create_jwt(
         token_type=ACCESS_TOKEN_TYPE,
@@ -43,10 +40,9 @@ def create_access_token(user: UserAuthSchema) -> str:
 
 
 def create_refresh_token(user: UserAuthSchema) -> str:
-    """Create refresh token
-    """
+    """Create refresh token"""
     jwt_payload = {
-        'sub': user.username,
+        "sub": user.username,
     }
     return create_jwt(
         token_type=REFRESH_TOKEN_TYPE,

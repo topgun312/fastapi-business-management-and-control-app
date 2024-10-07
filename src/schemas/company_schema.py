@@ -2,7 +2,7 @@ import datetime
 
 from pydantic import UUID4, BaseModel, Field
 
-from src.schemas.response import BaseResponse, BaseCreateResponse
+from src.schemas.response import BaseCreateResponse, BaseResponse
 
 
 class CompanyId(BaseModel):

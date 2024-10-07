@@ -12,20 +12,22 @@ if TYPE_CHECKING:
 
 
 class StructAdmPositionModel(BaseModel):
-    __tablename__ = 'struct_adm_position_table'
+    __tablename__ = "struct_adm_position_table"
 
     id: Mapped[uuid_pk]
     struct_adm_id: Mapped[int] = mapped_column(
-        ForeignKey('struct_adm_table.id', ondelete='CASCADE'), nullable=False,
+        ForeignKey("struct_adm_table.id", ondelete="CASCADE"),
+        nullable=False,
     )
     position_id: Mapped[int] = mapped_column(
-        ForeignKey('position_table.id', ondelete='CASCADE'), nullable=False,
+        ForeignKey("position_table.id", ondelete="CASCADE"),
+        nullable=False,
     )
-    struct_adm: Mapped['StructAdmModel'] = relationship(
-        back_populates='struct_adm_position',
+    struct_adm: Mapped["StructAdmModel"] = relationship(
+        back_populates="struct_adm_position",
     )
-    position: Mapped['PositionModel'] = relationship(
-        back_populates='struct_adm_position',
+    position: Mapped["PositionModel"] = relationship(
+        back_populates="struct_adm_position",
     )
 
     def to_pydantic_schema(self) -> StructAdmPositionDB:

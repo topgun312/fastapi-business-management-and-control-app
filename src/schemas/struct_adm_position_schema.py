@@ -1,6 +1,6 @@
 from pydantic import UUID4, BaseModel
 
-from src.schemas.response import BaseResponse, BaseCreateResponse
+from src.schemas.response import BaseCreateResponse, BaseResponse
 
 
 class StructAdmPositionId(BaseModel):
@@ -13,12 +13,14 @@ class CreateStructAdmPositionRequest(BaseModel):
 
 
 class UpdateStructAdmPositionRequest(
-    StructAdmPositionId, CreateStructAdmPositionRequest,
+    StructAdmPositionId,
+    CreateStructAdmPositionRequest,
 ): ...
 
 
 class StructAdmPositionDB(
-    StructAdmPositionId, CreateStructAdmPositionRequest,
+    StructAdmPositionId,
+    CreateStructAdmPositionRequest,
 ): ...
 
 

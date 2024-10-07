@@ -13,17 +13,19 @@ if TYPE_CHECKING:
 
 
 class UserPositionModel(BaseModel):
-    __tablename__ = 'user_position_table'
+    __tablename__ = "user_position_table"
 
     id: Mapped[uuid_pk]
     user_id: Mapped[uuid4] = mapped_column(
-        ForeignKey('user_table.id', ondelete='CASCADE'), nullable=False,
+        ForeignKey("user_table.id", ondelete="CASCADE"),
+        nullable=False,
     )
     position_id: Mapped[int] = mapped_column(
-        ForeignKey('position_table.id', ondelete='CASCADE'), nullable=False,
+        ForeignKey("position_table.id", ondelete="CASCADE"),
+        nullable=False,
     )
-    user: Mapped['User'] = relationship(back_populates='user_position')
-    position: Mapped['PositionModel'] = relationship(back_populates='user_position')
+    user: Mapped["User"] = relationship(back_populates="user_position")
+    position: Mapped["PositionModel"] = relationship(back_populates="user_position")
 
     def to_pydantic_schema(self) -> UserPositionDB:
         return UserPositionDB(**self.__dict__)

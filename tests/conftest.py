@@ -3,8 +3,6 @@ from typing import AsyncGenerator
 from uuid import uuid4
 
 import pytest
-
-
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from httpx import AsyncClient
@@ -95,19 +93,19 @@ async def async_client() -> AsyncGenerator[AsyncClient, None]:
 def user_test():
     """Create test user for auth"""
     return {
-    'id': 'fba99cad-8e39-4108-b692-ffe8ce3c5d70',
-    'username': 'john@example.com',
-    'password': 'bumer',
-    'is_active': True,
-    'is_admin': True
+        "id": "fba99cad-8e39-4108-b692-ffe8ce3c5d70",
+        "username": "john@example.com",
+        "password": "bumer",
+        "is_active": True,
+        "is_admin": True,
     }
 
 
 async def auth_user_issue_jwt_test(async_client, user_test):
     """Create auth test user"""
-    response = await async_client.post('/api/auth/jwt/login', data=user_test)
-    token = response.json()['access_token']
+    response = await async_client.post("/api/auth/jwt/login", data=user_test)
+    token = response.json()["access_token"]
     return {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {token}",
-          }
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {token}",
+    }

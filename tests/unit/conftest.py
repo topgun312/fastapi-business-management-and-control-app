@@ -1,56 +1,68 @@
 from copy import deepcopy
 from typing import Callable
+
 import pytest
-from sqlalchemy import  delete, insert
+from sqlalchemy import delete, insert
 from sqlalchemy_utils import Ltree
 
-
 from src.models import (
-  AccountModel,
-  StructAdmModel,
-  StructAdmPositionModel,
-  PositionModel,
-  TaskModel,
-  CompanyModel,
-  MemberModel,
-  InviteModel,
-  UserPositionModel,
-  User, SecretModel,
-  performers_table,
-  observers_table)
-
-from src.schemas.user_schema import TestUserSchema
-from src.schemas.invite_schema import TestInviteSchema
+    AccountModel,
+    CompanyModel,
+    InviteModel,
+    MemberModel,
+    PositionModel,
+    SecretModel,
+    StructAdmModel,
+    StructAdmPositionModel,
+    TaskModel,
+    User,
+    UserPositionModel,
+    observers_table,
+    performers_table,
+)
 from src.schemas.account_schema import TestAccountSchema
 from src.schemas.company_schema import TestCompanySchema
-from src.schemas.task_schema import TestTaskSchema ,TestObserversSchema, TestPerformersSchema
-from src.schemas.secret_schema import TestSecretSchema
+from src.schemas.invite_schema import TestInviteSchema
 from src.schemas.member_schema import TestMemberSchema
-from src.schemas.user_position_schema import TestUserPositionSchema
-from src.schemas.struct_adm_schema import TestStructAdmSchema
-from src.schemas.struct_adm_position_schema import TestStructAdmPositionSchema
 from src.schemas.position_schema import TestPositionSchema
-
-
+from src.schemas.secret_schema import TestSecretSchema
+from src.schemas.struct_adm_position_schema import TestStructAdmPositionSchema
+from src.schemas.struct_adm_schema import TestStructAdmSchema
+from src.schemas.task_schema import (
+    TestObserversSchema,
+    TestPerformersSchema,
+    TestTaskSchema,
+)
+from src.schemas.user_position_schema import TestUserPositionSchema
+from src.schemas.user_schema import TestUserSchema
 from tests.fixtures.postgres import (
-  FAKE_STRUCT_ADM_POSITIONS, FAKE_POSITIONS, FAKE_STRUCT_ADMS, FAKE_USER_POSITIONS,
-  FAKE_MEMBERS, FAKE_SECRETS, FAKE_USERS, FAKE_TASKS, FAKE_ACCOUNTS, FAKE_INVITES, FAKE_COMPANIES,
-  FAKE_OBSERVERS_TASKS, FAKE_PERFORMERS_TASKS
-
+    FAKE_ACCOUNTS,
+    FAKE_COMPANIES,
+    FAKE_INVITES,
+    FAKE_MEMBERS,
+    FAKE_OBSERVERS_TASKS,
+    FAKE_PERFORMERS_TASKS,
+    FAKE_POSITIONS,
+    FAKE_SECRETS,
+    FAKE_STRUCT_ADM_POSITIONS,
+    FAKE_STRUCT_ADMS,
+    FAKE_TASKS,
+    FAKE_USER_POSITIONS,
+    FAKE_USERS,
 )
 
-
 model_list = [
-AccountModel,
-  StructAdmModel,
-  StructAdmPositionModel,
-  PositionModel,
-  TaskModel,
-  CompanyModel,
-  MemberModel,
-  InviteModel,
-  UserPositionModel,
-  User, SecretModel
+    AccountModel,
+    StructAdmModel,
+    StructAdmPositionModel,
+    PositionModel,
+    TaskModel,
+    CompanyModel,
+    MemberModel,
+    InviteModel,
+    UserPositionModel,
+    User,
+    SecretModel,
 ]
 
 
@@ -88,6 +100,7 @@ def secrets() -> list[TestSecretSchema]:
 def members() -> list[TestMemberSchema]:
     return deepcopy(FAKE_MEMBERS)
 
+
 @pytest.fixture(scope="function")
 def tasks() -> list[TestTaskSchema]:
     return deepcopy(FAKE_TASKS)
@@ -111,6 +124,7 @@ def user_positions() -> list[TestUserPositionSchema]:
 @pytest.fixture(scope="function")
 def accounts() -> list[TestAccountSchema]:
     return deepcopy(FAKE_ACCOUNTS)
+
 
 @pytest.fixture(scope="function")
 def positions() -> list[TestPositionSchema]:
@@ -181,6 +195,7 @@ def add_positions(async_session_maker, positions) -> Callable:
 
     return _add_results
 
+
 @pytest.fixture(scope="function")
 def add_secrets(async_session_maker, secrets) -> Callable:
     async def _add_results():
@@ -200,9 +215,13 @@ def add_struct_adms(async_session_maker, struct_adms) -> Callable:
         async with async_session_maker() as session:
             for res_schema in struct_adms:
                 await session.execute(
-                    insert(StructAdmModel).values(path=Ltree(res_schema.path),
-                                                  id=res_schema.id, name=res_schema.name,
-                                                  company_id=res_schema.company_id, head_user_id=res_schema.head_user_id)
+                    insert(StructAdmModel).values(
+                        path=Ltree(res_schema.path),
+                        id=res_schema.id,
+                        name=res_schema.name,
+                        company_id=res_schema.company_id,
+                        head_user_id=res_schema.head_user_id,
+                    )
                 )
             await session.commit()
 
@@ -234,6 +253,7 @@ def add_tasks(async_session_maker, tasks) -> Callable:
 
     return _add_results
 
+
 @pytest.fixture(scope="function")
 def add_observers(async_session_maker, observers) -> Callable:
     async def _add_results():
@@ -245,6 +265,7 @@ def add_observers(async_session_maker, observers) -> Callable:
             await session.commit()
 
     return _add_results
+
 
 @pytest.fixture(scope="function")
 def add_performers(async_session_maker, performers) -> Callable:
@@ -258,17 +279,17 @@ def add_performers(async_session_maker, performers) -> Callable:
 
     return _add_results
 
+
 @pytest.fixture(scope="function")
 def add_users(async_session_maker, users) -> Callable:
     async def _add_results():
         async with async_session_maker() as session:
             for res_schema in users:
-                await session.execute(
-                    insert(User).values(**res_schema.model_dump())
-                )
+                await session.execute(insert(User).values(**res_schema.model_dump()))
             await session.commit()
 
     return _add_results
+
 
 @pytest.fixture(scope="function")
 def add_user_positions(async_session_maker, user_positions) -> Callable:

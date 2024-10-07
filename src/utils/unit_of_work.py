@@ -45,10 +45,10 @@ class AbstractUnitOfWork(ABC):
 
     @abstractmethod
     async def __aexit__(
-            self,
-            exc_type: type[BaseException] | None,
-            exc_val: BaseException | None,
-            exc_tb: TracebackType | None,
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
     ) -> None:
         raise NotImplementedError
 
@@ -79,8 +79,12 @@ class UnitOfWork(AbstractUnitOfWork):
         self.account = AccountRepository(self.session)
         self.task = TaskRepository(self.session)
 
-    async def __aexit__(self, exc_type: type[BaseException] | None,
-                        exc_val: BaseException | None, exc_tb: TracebackType | None) -> None:
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         if not exc_type:
             await self.commit()
         else:
@@ -99,4 +103,5 @@ def transaction_mode(func: AsyncFunc) -> AsyncFunc:
     async def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
         async with self.uow:
             return await func(self, *args, **kwargs)
+
     return wrapper

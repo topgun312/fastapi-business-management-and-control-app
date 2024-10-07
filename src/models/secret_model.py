@@ -13,22 +13,24 @@ if TYPE_CHECKING:
 
 
 class SecretModel(BaseModel):
-    __tablename__ = 'secret_table'
+    __tablename__ = "secret_table"
 
     id: Mapped[uuid_pk]
     password: Mapped[bytes] = mapped_column(nullable=False)
     user_id: Mapped[uuid4] = mapped_column(
-        ForeignKey('user_table.id', ondelete='CASCADE'), nullable=False,
+        ForeignKey("user_table.id", ondelete="CASCADE"),
+        nullable=False,
     )
     account_id: Mapped[uuid4] = mapped_column(
-        ForeignKey('account_table.id', ondelete='CASCADE'), nullable=False,
+        ForeignKey("account_table.id", ondelete="CASCADE"),
+        nullable=False,
     )
-    user: Mapped['User'] = relationship(back_populates='secret')
-    account: Mapped['AccountModel'] = relationship(back_populates='secret')
+    user: Mapped["User"] = relationship(back_populates="secret")
+    account: Mapped["AccountModel"] = relationship(back_populates="secret")
 
     __table_args__ = (
-        UniqueConstraint('user_id'),
-        UniqueConstraint('account_id'),
+        UniqueConstraint("user_id"),
+        UniqueConstraint("account_id"),
     )
 
     def to_pydantic_schema(self) -> SecretDB:

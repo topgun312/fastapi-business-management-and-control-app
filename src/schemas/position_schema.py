@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from src.schemas.response import BaseResponse, BaseCreateResponse
+from src.schemas.response import BaseCreateResponse, BaseResponse
 
 
 class PositionId(BaseModel):

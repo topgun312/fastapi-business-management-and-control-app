@@ -1,15 +1,15 @@
 __all__ = [
-    'AccountRepository',
-    'CompanyRepository',
-    'InviteRepository',
-    'MemberRepository',
-    'PositionRepository',
-    'SecretRepository',
-    'StructAdmPositionRepository',
-    'StructAdmRepository',
-    'TaskRepository',
-    'UserPositionRepository',
-    'UserRepository',
+    "AccountRepository",
+    "CompanyRepository",
+    "InviteRepository",
+    "MemberRepository",
+    "PositionRepository",
+    "SecretRepository",
+    "StructAdmPositionRepository",
+    "StructAdmRepository",
+    "TaskRepository",
+    "UserPositionRepository",
+    "UserRepository",
 ]
 
 from src.repositories.account_repository import AccountRepository

@@ -10,7 +10,11 @@ from sqlalchemy.ext.asyncio import (
 from src.config import settings
 
 async_engine = create_async_engine(
-    url=settings.DB_URL, echo=False, future=True, pool_size=50, max_overflow=100,
+    url=settings.DB_URL,
+    echo=False,
+    future=True,
+    pool_size=50,
+    max_overflow=100,
 )
 
 async_session_maker = async_sessionmaker(
@@ -23,14 +27,12 @@ async_session_maker = async_sessionmaker(
 
 
 async def get_async_connection() -> AsyncGenerator[AsyncConnection, None]:
-    """Функция-генератор для создания асинхронного соединения
-    """
+    """Функция-генератор для создания асинхронного соединения"""
     async with async_engine.begin() as conn:
         yield conn
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
-    """Функция-генератор для создания асинхронной сессии
-    """
+    """Функция-генератор для создания асинхронной сессии"""
     async with async_session_maker() as session:
         yield session

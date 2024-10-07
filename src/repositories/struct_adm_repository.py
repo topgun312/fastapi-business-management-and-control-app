@@ -15,30 +15,36 @@ class StructAdmRepository(SQLAlchemyRepository):
         path: Result | None = await self.session.execute(query)
         return path.scalar_one_or_none()
 
-    async def get_children_paths(self, struct_adm_name: str) -> Sequence[Row[tuple[Any, ...] | Any]]:
+    async def get_children_paths(
+        self, struct_adm_name: str
+    ) -> Sequence[Row[tuple[Any, ...] | Any]]:
         query = text(
-            'SELECT id, name, path FROM struct_adm_table WHERE path <@ (SELECT path FROM struct_adm_table WHERE name = :node_name)',
+            "SELECT id, name, path FROM struct_adm_table WHERE path <@ (SELECT path FROM struct_adm_table WHERE name = :node_name)",
         ).params(node_name=struct_adm_name)
         result: Result = await self.session.execute(query)
         child_nodes = result.fetchall()
         return child_nodes
 
-    async def change_children_paths(self, child_nodes: Sequence[Row[tuple[Any, ...] | Any]]) -> None:
+    async def change_children_paths(
+        self, child_nodes: Sequence[Row[tuple[Any, ...] | Any]]
+    ) -> None:
         node_name = child_nodes[0][1]
         for child in child_nodes[1:]:
             child_id, child_name, child_path = child
-            new_path = child_path.replace(f'{node_name}.', '')
+            new_path = child_path.replace(f"{node_name}.", "")
             stmt = text(
-                'UPDATE struct_adm_table SET path = :new_path WHERE name = :child_name',
-            ).params({'new_path': new_path, 'child_name': child_name})
+                "UPDATE struct_adm_table SET path = :new_path WHERE name = :child_name",
+            ).params({"new_path": new_path, "child_name": child_name})
             await self.session.execute(stmt)
 
-    async def update_children_paths(self, child_nodes: Sequence[Row[tuple[Any, ...] | Any]], new_path_name) -> None:
+    async def update_children_paths(
+        self, child_nodes: Sequence[Row[tuple[Any, ...] | Any]], new_path_name
+    ) -> None:
         node_name = child_nodes[0][1]
         for child in child_nodes:
             child_id, child_name, child_path = child
-            new_path = child_path.replace(f'{node_name}', f'{new_path_name}')
+            new_path = child_path.replace(f"{node_name}", f"{new_path_name}")
             stmt = text(
-                'UPDATE struct_adm_table SET path = :new_path WHERE name = :child_name',
-            ).params({'new_path': new_path, 'child_name': child_name})
+                "UPDATE struct_adm_table SET path = :new_path WHERE name = :child_name",
+            ).params({"new_path": new_path, "child_name": child_name})
             await self.session.execute(stmt)

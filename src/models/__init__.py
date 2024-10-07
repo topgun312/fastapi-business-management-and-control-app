@@ -1,17 +1,17 @@
 __all__ = [
-    'AccountModel',
-    'CompanyModel',
-    'InviteModel',
-    'MemberModel',
-    'PositionModel',
-    'SecretModel',
-    'StructAdmModel',
-    'StructAdmPositionModel',
-    'TaskModel',
-    'User',
-    'UserPositionModel',
-    'performers_table',
-    'observers_table'
+    "AccountModel",
+    "CompanyModel",
+    "InviteModel",
+    "MemberModel",
+    "PositionModel",
+    "SecretModel",
+    "StructAdmModel",
+    "StructAdmPositionModel",
+    "TaskModel",
+    "User",
+    "UserPositionModel",
+    "performers_table",
+    "observers_table",
 ]
 
 

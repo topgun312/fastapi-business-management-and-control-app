@@ -72,7 +72,9 @@ class SQLAlchemyRepository(AbstractRepository):
         return res.scalars().all()
 
     async def update_one_by_id(
-        self, _id: int | UUID4, **values,
+        self,
+        _id: int | UUID4,
+        **values,
     ) -> type(model) | None:
         query = (
             update(self.model)
@@ -84,7 +86,9 @@ class SQLAlchemyRepository(AbstractRepository):
         return _obj.scalar_one_or_none()
 
     async def update_one_by_name(
-        self, _name: str, **values,
+        self,
+        _name: str,
+        **values,
     ) -> type(model) | None:
         query = (
             update(self.model)

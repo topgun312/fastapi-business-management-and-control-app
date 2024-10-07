@@ -9,7 +9,9 @@ class AccountRepository(SQLAlchemyRepository):
     model = AccountModel
 
     async def update_one_by_email(
-        self, _email: EmailStr, **kwargs,
+        self,
+        _email: EmailStr,
+        **kwargs,
     ) -> type(model) | None:
         query = (
             update(self.model)

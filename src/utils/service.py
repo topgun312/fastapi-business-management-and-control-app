@@ -23,28 +23,37 @@ class BaseService:
 
     @transaction_mode
     async def add_one_and_get_obj(self, **kwargs) -> Any:
-        _obj = await self.uow.__dict__[self.base_repository].add_one_and_get_obj(**kwargs)
+        _obj = await self.uow.__dict__[self.base_repository].add_one_and_get_obj(
+            **kwargs
+        )
         return _obj
 
     @transaction_mode
     async def get_bu_query_one_or_none(self, **kwargs) -> Any | None:
-        _result = await self.uow.__dict__[self.base_repository].get_by_query_one_or_none(
-                **kwargs,
-            )
+        _result = await self.uow.__dict__[
+            self.base_repository
+        ].get_by_query_one_or_none(
+            **kwargs,
+        )
         return _result
 
     @transaction_mode
     async def get_by_query_all(self, **kwargs) -> Sequence[Any]:
-        _result = await self.uow.__dict__[self.base_repository].get_by_query_all(**kwargs)
+        _result = await self.uow.__dict__[self.base_repository].get_by_query_all(
+            **kwargs
+        )
         return _result
 
     @transaction_mode
     async def update_one_by_id(
-        self, _id: int | str | UUID4, values: dict,
+        self,
+        _id: int | str | UUID4,
+        values: dict,
     ) -> Any:
         _obj = await self.uow.__dict__[self.base_repository].update_one_by_id(
-                _id=_id, values=values,
-            )
+            _id=_id,
+            values=values,
+        )
 
     @transaction_mode
     async def delete_by_query(self, **kwargs) -> None:

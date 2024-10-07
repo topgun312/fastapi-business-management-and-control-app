@@ -13,19 +13,21 @@ if TYPE_CHECKING:
 
 
 class MemberModel(BaseModel):
-    __tablename__ = 'member_table'
+    __tablename__ = "member_table"
 
     id: Mapped[uuid_pk]
     user_id: Mapped[uuid4] = mapped_column(
-        ForeignKey('user_table.id', ondelete='CASCADE'), nullable=False,
+        ForeignKey("user_table.id", ondelete="CASCADE"),
+        nullable=False,
     )
     company_id: Mapped[uuid4] = mapped_column(
-        ForeignKey('company_table.id', ondelete='CASCADE'), nullable=False,
+        ForeignKey("company_table.id", ondelete="CASCADE"),
+        nullable=False,
     )
-    user: Mapped['User'] = relationship(back_populates='member')
-    company: Mapped['CompanyModel'] = relationship(back_populates='member')
+    user: Mapped["User"] = relationship(back_populates="member")
+    company: Mapped["CompanyModel"] = relationship(back_populates="member")
 
-    __table_args__ = (UniqueConstraint('user_id'),)
+    __table_args__ = (UniqueConstraint("user_id"),)
 
     def to_pydantic_schema(self) -> MemberDB:
         return MemberDB(**self.__dict__)

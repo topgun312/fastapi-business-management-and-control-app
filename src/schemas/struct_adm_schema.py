@@ -1,7 +1,7 @@
-from pydantic import UUID4, BaseModel, Field, ConfigDict
+from pydantic import UUID4, BaseModel, ConfigDict, Field
 from sqlalchemy_utils import Ltree
 
-from src.schemas.response import BaseResponse, BaseCreateResponse
+from src.schemas.response import BaseCreateResponse, BaseResponse
 
 
 class StructAdmId(BaseModel):
